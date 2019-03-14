@@ -1,0 +1,28 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+/box-sso-server//target/
+/box-sso-server/!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/box-sso-server/.idea
+/box-sso-server/*.iws
+/box-sso-server/*.iml
+/box-sso-server/*.ipr
+
+logs/
+/upload/
+/box-sso-server/logs/
+/box-sso-server//upload/

@@ -1,0 +1,71 @@
+<Configuration status="OFF" monitorInterval="500">
+    <!--定义日志储存文件目录-->
+    <properties>
+        <property name="LOG_HOME">logs</property>
+    </properties>
+    <Appenders>
+        <!--控制台输出所有日志-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <!--Info级别日志输出-->
+        <RollingRandomAccessFile name="InfoFile"
+                                 fileName="${LOG_HOME}/info/info.log"
+                                 filePattern="${LOG_HOME}/info/${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!--按照文件大小进行切分-->
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了1000 -->
+            <DefaultRolloverStrategy max="100" />
+        </RollingRandomAccessFile>
+        <!--warn级别日志输出-->
+        <RollingRandomAccessFile name="WarnFile"
+                                 fileName="${LOG_HOME}/warn/warn.log"
+                                 filePattern="${LOG_HOME}/warn/${date:yyyy-MM-dd}/warn-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100" />
+        </RollingRandomAccessFile>
+
+        <!--Error级别日志输出-->
+        <RollingRandomAccessFile name="ErrorFile"
+                                 fileName="${LOG_HOME}/error/error.log"
+                                 filePattern="${LOG_HOME}/error/${date:yyyy-MM-dd}/error-%d{yyyy-MM-dd-HH-mm}-%i.log">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <!--以分钟为粒度对日志进行封存-->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <!--一个文件夹中的文件数量最多1000-->
+            <DefaultRolloverStrategy max="100" />
+        </RollingRandomAccessFile>
+    </Appenders>
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <Loggers>
+        <AsyncRoot level="INFO" includeLocation="true">
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="WarnFile"/>
+            <AppenderRef ref="ErrorFile"/>
+            <AppenderRef ref="Console" />
+        </AsyncRoot>
+    </Loggers>
+
+</Configuration>
